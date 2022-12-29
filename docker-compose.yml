@@ -1,0 +1,27 @@
+services:
+  qschool:
+    image: postgres:14.6-alpine
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+  # pgadmin:
+  #   image: chorss/docker-pgadmin4
+  #   ports:
+  #     - 5050:5050
+  web:
+    build: .
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=qschool
+    depends_on:
+      - qschool

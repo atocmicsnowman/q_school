@@ -1,0 +1,147 @@
+{% extends "f3_base_view.html" %}
+{% load static %}
+{% block title %}Add PAX{% endblock %}
+
+{% block bodywork %}
+<script type="text/javascript" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatables/media/js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatables-bootstrap/js/dataTables.bootstrap.min.js' %}"></script>
+<div id="region-pax-table" class="container">
+    <div class="row mt-3 ">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col-md-4 offset-md-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Add New PAX
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="region-pax" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Handle</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Email</th>
+                        <th>Sub</th>
+                        <th>Phone</th>
+                        <th>Sub</th>
+                        <th>Role(s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.f3_handle }}</td>
+                        <td>{{ user.user.last_name}}</td>
+                        <td>{{ user.user.first_name }}</td>
+                        <td>{{ user.user.email }}</td>
+                        <td>{{ user.email_subscribed }}</td>
+                        <td>{{ user.cell_number }}</td>
+                        <td>{{ user.sms_subscribed }}</td>
+                        <td>{{ count0 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+
+      
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="add-pax-modal-form">
+                {% csrf_token %}
+    
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">First Name</span>
+                    <input name="first_name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Last Name</span>
+                    <input name="last_name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">F3 Handle</span>
+                    <input name="f3_handle" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+                    <input name="email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Phone</span>
+                    <input name="phone" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="form-check form-switch">
+                    <input name="email_notify" class="form-check-input" type="checkbox" id="email_notify_switch_check" checked>
+                    <label class="form-check-label" for="email_notify_switch_check">Subscribe to Email Notifications</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input name="sms_notify" class="form-check-input" type="checkbox" id="sms_notify_switch_check" checked>
+                    <label class="form-check-label" for="sms_notify_switch_check">Subscribe to SMS Notifications</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button id="close_pax_modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button id="add_pax_button" type="button" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock %}  
+
+{% block scripting %}
+<script>
+    $(document).ready(function () {
+        $('#region-pax').DataTable();
+    });
+    document.getElementById('add_pax_button').addEventListener("click", function (event ) {
+        submit_form(event)
+
+    function submit_form(event) {
+        var form_info = document.querySelectorAll("#add-pax-modal-form input")
+        var new_user_info = {}
+        $('#add-pax-modal-form input').each(function(e) {
+            var form_name = $(this).attr('name') 
+            var value = $(this).val();
+            new_user_info[form_name] = value; 
+          })
+          console.log("submit,", new_user_info)
+          console.log(new_user_info["csrfmiddlewaretoken"])
+        $.ajax({
+            url: window.pathname,
+            type: "POST",
+            data: JSON.stringify(new_user_info),
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function(xhr) { 
+                xhr.setRequestHeader('X-CSRFToken', new_user_info.csrfmiddlewaretoken) 
+            },
+        }).done(function (response) {
+            if (response.status === "success") {
+                alert('user added, yo')
+            }
+            else if (response.status === "fail") {
+            }
+
+
+        }).fail(function () {
+            
+        });
+    }
+    })
+</script>
+{% endblock %}
