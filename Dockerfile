@@ -1,7 +1,14 @@
 # syntax=docker/dockerfile:1
 FROM python:3.10.7-slim-buster
+ARG POSTGRES_DB
+ARG POSTGRES_USER
+ARG POSTGRES_NAME
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV POSTGRES_DB=${POSTGRES_DB}
+ENV POSTGRES_USER=${POSTGRES_USER}
+ENV POSTGRES_NAME=${POSTGRES_NAME}
 
 RUN mkdir /var/log/webapp
 RUN touch /var/log/webapp/debug.log
@@ -23,8 +30,6 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
 RUN python3 manage.py collectstatic --no-input
-RUN python3 manage.py makemigrations
-RUN python3 manage.py migrate
 RUN ls -lah
 
 ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

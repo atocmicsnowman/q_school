@@ -29,6 +29,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+REQUIRED_USER_UPLOAD_CSV_FIELDS = {
+    "first_name", "last_name", "f3_handle", "email"
+}
+
 
 # Application definition
 
@@ -40,8 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'phonenumber_field',
+    'rest_framework',
     'q_school.registration',
     'q_school.geography',
+    'schedule'
     ]
 
 MIDDLEWARE = [
@@ -52,6 +58,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+TEMPLATE_CONTEXT_PROCESSORS = [
+    'django.template.context_processors.request'
 ]
 
 ROOT_URLCONF = 'q_school.urls'
@@ -77,7 +87,8 @@ WSGI_APPLICATION = 'q_school.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+print(f"{os.environ.get('POSTGRES_DB')=}\n{os.environ.get('POSTGRES_NAME')=}\n{os.environ.get('POSTGRES_USER')=}")
+print(f"{os.environ.get('POSTGRES_PASSWORD')=}")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

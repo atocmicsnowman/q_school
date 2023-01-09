@@ -16,6 +16,7 @@ class Pax(models.Model):
     email_subscribed = models.BooleanField(default=True)
     email_notifications = models.BooleanField(default=True)
     retired = models.BooleanField(default=False)
+    city = models.CharField(max_length=200, blank=True, null=True)
 
 
 class SocialMediaPlatform(models.Model):
@@ -42,3 +43,4 @@ class SocialMediaAccount(models.Model):
     social_media_platform = models.ForeignKey(
         SocialMediaPlatform, on_delete=models.CASCADE
     )
+

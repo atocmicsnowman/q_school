@@ -3,6 +3,7 @@ services:
     image: postgres:14.6-alpine
     volumes:
       - ./data/db:/var/lib/postgresql/data
+    container_name: qschool_db_container
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -22,6 +23,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=qschool
+      - POSTGRES_NAME=postgres
+      - POSTGRES_DB=qschool_db_container
     depends_on:
       - qschool

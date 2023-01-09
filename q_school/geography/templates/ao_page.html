@@ -1,0 +1,266 @@
+{% extends "f3_base_view.html" %}
+{% load static %}
+{% block title %}Regions{% endblock %}
+
+{% block bodywork %}
+<script type="text/javascript" src="{% static 'datatables/media/js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatables-bootstrap/js/dataTables.bootstrap.min.js' %}"></script>
+<div id="region-pax-table" class="container">
+    <div class="row mt-3 ">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col-md-4 offset-md-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#area-add-modal">
+                Add New AO
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="region-pax" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Street Address</th>
+                        <th>Street Address 2</th>
+                        <th>Country</th>
+                        <th>longitude</th>
+                        <th>latitude</th>
+                        <th>Site Q</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for area in areas %}
+                    <tr>
+                        <td><a href="{% url 'area_of_operation_list' area.id %}">{{ area.name }} </a></td>
+                        <td>{{ area.street_address }}</td>
+                        <td>{{ area.street_address2 }}</td>
+                        <td>{{ area.country }}</td>
+                        <td>{{ area.gps_long }}</td>
+                        <td>{{ area.gps_lat }}</td>
+                        <td>{{ area.primary_site_q.f3_handle }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="region-added-toasty" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+                <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+            </svg>
+            <strong class="me-auto">Region</strong>
+            <small class="text-muted">just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Region created successfully
+        </div>
+    </div>
+    
+</div>
+<div>
+    <!-- Modal -->
+    <div class="modal fade" id="area-add-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="area-add-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="area-add-modalLabel">Add Region</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="add-pax-modal-form">
+                    {% csrf_token %}
+                    <div class="lead">Enter the specifics about the AO</div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Name</span>
+                        <input name="area_name" type="text" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                    <div class="row">
+                        <div>
+                            <p class="">Assign a primary region here, other regions can be added later.</p>
+                        </div>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Region</span>
+                        <input class="form-control" list="general_region_list" name="default_region" id="default_region"
+                            placeholder="Type to search...">
+                        <datalist id="general_region_list" required>
+                        </datalist>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">AO Type</span>
+                        <select name="area_country" id="ao_type" class="form-select"
+                            aria-label="Country selection" required>
+                            <option value=""></option>
+                            {% for ao_type in ao_types %}
+                            <option value="{{ ao_type.id }}">{{ ao_type.ao_type }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <p class="">Assign the primary site Q here.</p>
+                        </div>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Site Q</span>
+                        <input class="form-control" list="site_q_list" name="site_q" id="site_q"
+                            placeholder="Type to search...">
+                        <datalist id="site_q_list" required>
+                        </datalist>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Country</span>
+                        <select name="area_country" id="region_country" class="form-select"
+                            aria-label="Country selection" required>
+                            <option value=""></option>
+                            {% for country in countries %}
+                            <option value="{{ country.0 }}">{{country.1}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Territory/State</span>
+                        <input name="area_state" type="text" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">City</span>
+                        <input name="area_city" type="text" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Latitude</span>
+                        <input name="area_lat" type="number" step="0.000001" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-sm">
+                    {% comment %} </div>
+                    <div class="input-group input-group-sm mb-3"> {% endcomment %}
+                        <span class="input-group-text">Longitude</span>
+                        <input name="area_long" type="number" step="0.000001" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Description</span>
+                        <textarea name="area_description" type="text" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"></textarea>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button id="close_ao_modal" type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button id="add_area_button" type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripting %}
+<script>
+    $(document).ready(function () {
+        $('#region-pax').DataTable();
+        $('.toast').toast({
+            'delay': 1800
+        })
+        populate_region_list()
+        document.getElementById('default_region').addEventListener("change", function(event) {
+            console.log(document.getElementById('default_region'))
+            update_site_q_list(
+                document.getElementById('default_region').value
+            )
+        })
+    });
+    document.getElementById('add_area_button').addEventListener("click", function (event) {
+        submit_form(event)
+
+        function submit_form(event) {
+            var form_info = document.querySelectorAll("#add-pax-modal-form input")
+            var new_area_info = {}
+            $('#add-pax-modal-form input').each(function (e) {
+                var form_name = $(this).attr('name')
+                var value = $(this).val();
+                new_area_info[form_name] = value;
+            })
+            $('#add-pax-modal-form textarea').each(function (e) {
+                var form_name = $(this).attr('name')
+                var value = $(this).val();
+                new_area_info[form_name] = value;
+            })
+            $('#add-pax-modal-form select').each(function (e) {
+                var form_name = $(this).attr('name')
+                var value = $(this).val();
+                new_area_info[form_name] = value;
+                
+            })
+            console.log("submit,", new_area_info)
+            console.log(new_area_info["csrfmiddlewaretoken"])
+            $.ajax({
+                url: window.pathname,
+                type: "POST",
+                data: JSON.stringify(new_area_info),
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', new_area_info.csrfmiddlewaretoken)
+                },
+            }).done(function (response) {
+                $('#area-add-modal').hide()
+                $('.modal-backdrop').remove()
+                $('#region-added-toasty').toast('show')
+
+            }).fail(function () {
+
+            });
+        }
+    })
+    function populate_region_list() {
+        console.log("populate")
+        $.ajax({
+            url: "{% url 'api_region_view_set' %}",
+            type: "GET",
+            dataType: 'json',
+            success: function (result) {
+                console.log(result)
+                $.each(result, function (i, region) {
+                    console.log(region)
+                    $('#general_region_list').append($('<option>', {
+                        value: region.name + ' (' + region.associated_country + ': ' +
+                            region.associated_territory + ', ' + region
+                            .associated_city + ')',
+                        name: region.name + ' (' + region.associated_country + ': ' +
+                            region.associated_territory + ', ' + region
+                            .associated_city + ')',
+                        id: region.pk,
+                    }))
+                })
+            }
+        })
+    }
+    function update_site_q_list(region_id) {
+        $('#site_q_list').empty()
+        $.ajax({
+            url: "{% url 'user_list' %}",
+            type: "GET",
+            data: {region_id: region_id},
+            dataType: 'json',
+            success: function(result) {
+                nantan_select = $("#region_nantan_list")
+                $.each(result.pax_list, function(i, pax) {
+                    $('#site_q_list').append($('<option>', {
+                        value: pax.user__username, 
+                        text: pax.f3_handle + ' (' + pax.user__last_name + ',' + pax.user__first_name + ')'
+                    }))
+                })
+            }
+        })
+    }
+
+</script>
+{% endblock %}

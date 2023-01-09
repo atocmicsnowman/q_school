@@ -1,0 +1,6 @@
+os.environ.get('POSTGRES_DB')='qschool_db_container'
+os.environ.get('POSTGRES_NAME')='postgres'
+os.environ.get('POSTGRES_USER')='postgres'
+os.environ.get('POSTGRES_PASSWORD')='postgres'
+DATABASE IP ADDRESS 172.25.0.2
+[{"model": "geography.areaofoperationtype", "pk": 1, "fields": {"ao_type": "1st F"}}, {"model": "geography.areaofoperationtype", "pk": 2, "fields": {"ao_type": "2nd F"}}, {"model": "geography.areaofoperationtype", "pk": 3, "fields": {"ao_type": "3rd F"}}, {"model": "geography.areaofoperationtype", "pk": 4, "fields": {"ao_type": "Convergence"}}, {"model": "geography.areaofoperationtype", "pk": 5, "fields": {"ao_type": "Invergence"}}, {"model": "geography.areaofoperationtype", "pk": 6, "fields": {"ao_type": "CSAUP"}}]

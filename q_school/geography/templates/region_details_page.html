@@ -53,7 +53,7 @@
     </div>
     <div class="row mt-3">
         <div class="col-sm-12 ">
-            <h3>Membership information</h3>
+            <h3>Shared Leadership Team (SLT)</h3>
         </div>
     </div>
     <div class="row mt-3 ">
@@ -61,19 +61,47 @@
             Nantan
         </div>
         <div class="col-sm-6 col-md-3 mt-3">
-            {{ region.nantan.f3_handle }}
+            {% if region.nantan %}
+            <a href="{% url 'member_management' region.nantan.user.id %}">{{ region.nantan.f3_handle }}</a>
+            {% endif %}
         </div>
         <div class="col-sm-6 col-md-3 mt-3">
             Weasel Shaker
         </div>
         <div class="col-sm-6 col-md-3 mt-3">
-            {{ region.weasel_shaker.f3_handle }}
+            {% if region.weasel_shaker %}
+            <a href="{% url 'member_management' region.weasel_shaker.user.id %}">{{ region.weasel_shaker.f3_handle }}</a>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 col-md-3 mt-3">
+            1st F Q
+        </div>
+        <div class="col-sm-6 col-md-3 mt-3">
+            {% if region.first_f %}
+            <a href="{% url 'member_management' region.first_f.user.pk %}">{{ region.first_f.f3_handle }}</a>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 col-md-3 mt-3">
+            2nd F Q
+        </div>
+        <div class="col-sm-6 col-md-3 mt-3">
+            {% if region.second_f %}
+            <a href="{% url 'member_management' region.second_f.user.pk %}">{{ region.second_f.f3_handle }}</a>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 col-md-3 mt-3">
+            3rd F Q
+        </div>
+        <div class="col-sm-6 col-md-3 mt-3">
+            {% if region.third_f %}
+            <a href="{% url 'member_management' region.third_f.user.pk %}">{{ region.third_f.f3_handle }}</a>
+            {% endif %}
         </div>
     </div>
         <div class="row mt-3">
         <div class="col-sm-4 col-md-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#region-membership-modal">
-                Edit Membership
+                Edit SLT
             </button>
         </div>
     </div>
@@ -174,52 +202,59 @@
                     {% csrf_token %}
                     <div class="row"><div class="col"><div class="text-bg-danger" id="region-membership-error-text"></div></div></div>
                     <div>Here you can assign the region roles to individual PAX
-                    </div>{{ pax_list }}
+                    </div>
                     
                     <div class="input-group input-group-sm mb-3">
-                        <select name="region_nantan" id="region_nantan" class="form-select"
-                            aria-label="Region Nantan" required>
-                        </select>
+                        <span class="input-group-text">Nantan</span>
+                        <input class="form-control" list="general_user_list" name="region_nantan" id="region_nantan" placeholder="Type to search...">
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <span class="input-group-text">Country</span>
-                        <select name="region_country" id="region_country" class="form-select"
-                            aria-label="Country selection" required>
-                            {% for country in countries %}
-                                {% if country.0 == region.country %}
-                                <option value="{{ country.0 }}" selected>{{country.1}} </option>
-                                {% else %}
-                                <option value="{{ country.0 }}">{{country.1}} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div>The territory/state and city are not used as an address, only as a way to differentiate between
-                        multiple regions that can potentially share a name.</div>
-                    <div class="input-group input-group-sm mb-3">
-                        <span class="input-group-text">Territory/State</span>
-                        <input name="region_territory" type="text" class="form-control" value="{{ region.associated_territory }}"
-                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        <span class="input-group-text">Weasel Shaker</span>
+                        <input class="form-control" list="general_user_list" name="weasel_shaker" id="weasel_shaker" placeholder="Type to search...">
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <span class="input-group-text">City (not used for addressing)</span>
-                        <input name="region_city" type="text" class="form-control" aria-label="Sizing example input"
-                            aria-describedby="inputGroup-sizing-sm" value="{{ region.associated_city }}">
+                        <span class="input-group-text">1st F Q</span>
+                        <input class="form-control" list="general_user_list" name="1st_f_q" id="1st_f_q" placeholder="Type to search...">
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <span class="input-group-text">Description</span>
-                        <textarea name="region_description" type="text" class="form-control"
-                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">{{ region.description }}</textarea>
+                        <span class="input-group-text">2nd F Q</span>
+                        <input class="form-control" list="general_user_list" name="2nd_f_q" id="2nd_f_q" placeholder="Type to search...">
                     </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">3rd F Q</span>
+                        <input class="form-control" list="general_user_list" name="3rd_f_q" id="3rd_f_q" placeholder="Type to search...">
+                    </div>
+                    <div>Add/remove comz team members here</div>
+                    <div class="input-group input-group-sm mb-2">
+                        <span class="input-group-text">Comz Team</span>
+                        <input class="form-control" list="comz_team_list" name="comz_team" id="comz_team" placeholder="Separate each with commas..." multiple>
+                        <datalist id="comz_team_list" required>
+                        </datalist>
+                        <button id="add_comz_candidate" type="button" class="btn"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                        </button>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div id="comz_candidates"></div>
+                    </div>
+                    
+                    
                 </div>
                 <div class="modal-footer">
                     <button id="close_pax_modal" type="button" class="btn btn-secondary"
                         data-bs-dismiss="modal">Close</button>
-                    <button id="edit_region_settings_submit_button" type="button" class="btn btn-primary">Submit</button>
+                    <button id="edit_region_slt_submit_button" type="button" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div style="display:none">
+    <datalist id="general_user_list" required>
+    </datalist>
 </div>
 <div>
     
@@ -235,6 +270,7 @@
         })
         populate_all_users()
     });
+
     document.getElementById('edit_region_settings_submit_button').addEventListener("click", function (event) {
         submit_form(event)
 
@@ -255,8 +291,6 @@
                 var value = $(this).val();
                 new_user_info[form_name] = value;
             })
-            console.log("submit,", new_user_info)
-            console.log(new_user_info["csrfmiddlewaretoken"])
             $.ajax({
                 url: window.pathname,
                 type: "POST",
@@ -268,7 +302,7 @@
             }).done(function (data, textStatus, response) {
                 $('#region-settings-modal').hide()
                 $('.modal-backdrop').remove()
-                $('#region-added-toasty').toast('show')
+                $('#region-updated-toasty').toast('show')
                 $('#region-settings-error-text').text("")
             }).fail(function (data, textStatus, response) {
                 
@@ -279,22 +313,123 @@
         }
     })
 
+    document.getElementById('edit_region_slt_submit_button').addEventListener("click", function (event) {
+        submit_form(event)
+
+        function submit_form(event) {
+            var region_slt_membership_info = {}
+            $('#edit-region-membership-modal-form input').each(function (e) {
+                var form_name = $(this).attr('name')
+                var value = $(this).val();
+                region_slt_membership_info[form_name] = value;
+            })
+            $('#edit-region-membership-modal-form textarea').each(function (e) {
+                var form_name = $(this).attr('name')
+                var value = $(this).val();
+                region_slt_membership_info[form_name] = value;
+            })
+            $('#edit-region-membership-modal-form select').each(function (e) {
+                var form_name = $(this).attr('name')
+                var value = $(this).val();
+                region_slt_membership_info[form_name] = value;
+            })
+            var comz_users = []
+            $('#edit-region-membership-modal-form .f3_commie').each(function (e) {
+                comz_users.push(this.id)
+            })
+            region_slt_membership_info['comz_users'] = comz_users
+            $.ajax({
+                url: window.pathname,
+                type: "POST",
+                data: JSON.stringify(region_slt_membership_info),
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', region_slt_membership_info.csrfmiddlewaretoken)
+                },
+            }).done(function (data, textStatus, response) {
+                $('#region-membership-modal').hide()
+                $('.modal-backdrop').remove()
+                $('#region-updated-toasty').toast('show')
+                $('#region-settings-error-text').text("")
+            }).fail(function (data, textStatus, response) {
+                
+                error_text = data.responseJSON.error
+                console.log(error_text)
+                $('#region-settings-error-text').text(error_text)
+            });
+        }
+    })
+
+    document.getElementById('add_comz_candidate').addEventListener("click", function(event) {
+        var comz_candidate_username = document.getElementById('comz_team').value
+        if (comz_candidate_username === "") { return }
+        selector_is = 'comz_team_list option[value=\'' + comz_candidate_username +'\']'
+        member = document.querySelector('#comz_team_list option[value=\'' + comz_candidate_username +'\']')
+        
+        if (member_is_candidate(member)) {
+            document.getElementById('comz_team').value = ""
+            return
+        }
+        new_button = create_person_remove_button(member)
+        document.getElementById('comz_team').value = ""
+        $('#comz_candidates').append(new_button)
+        activate_comz_removal_button(member)
+    })
+
     function populate_all_users() {
         $.ajax({
             url: "{% url 'user_list' %}",
             type: "GET",
             dataType: 'json',
             success: function(result) {
-                nantan_select = $("#region_nantan")
+                nantan_select = $("#region_nantan_list")
                 $.each(result.pax_list, function(i, pax) {
-                    console.log("pax", pax)
-                    $('#region_nantan').append($('<option>', {
-                        value: pax.id, 
-                        text: pax.f3_handle + ' (' + pax.user__last_name + ',' + pax.user__first_name + ') - ' + pax.user__username
+                    $('#general_user_list').append($('<option>', {
+                        value: pax.user__username, 
+                        text: pax.f3_handle + ' (' + pax.user__last_name + ',' + pax.user__first_name + ')'
+                    }))
+                    $('#comz_team_list').append($('<option>', {
+                        value: pax.user__username,
+                        f3_handle: pax.f3_handle,
+                        user_id: pax.id,
+                        text: pax.f3_handle + ' (' + pax.user__last_name + ',' + pax.user__first_name + ')'
                     }))
                 })
             }
         })
     }
+
+    function member_is_candidate(member_option) {
+        person_id = member_option.getAttribute('user_id')
+        if ($('#remove-commie-' + person_id).length > 0) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
+    function create_person_remove_button(member_option) {
+        person_value = member_option.getAttribute('value')
+        person_handle = member_option.getAttribute('f3_handle')
+        person_id = member_option.getAttribute('user_id')
+        inner_html = '<div class="row mt-2 border rounded"><div class="col-sm-8 f3_commie" id="'
+        inner_html += person_id + '">'
+        inner_html += person_handle + '</div><div class="col-sm-4">'
+        inner_html += '<button type="" class="btn btn-danger" id="remove-commie-' + person_id + '" value="' + person_value + '">' + person_x_fill + '</button>'
+        inner_html += '</div></div>'
+        return inner_html
+    }
+    function activate_comz_removal_button(member_option) {
+        person_id = member_option.getAttribute('user_id')
+        document.getElementById("remove-commie-" + person_id).addEventListener("click", function(event) {remove_comz_candidate(event)})
+    }
+    function remove_comz_candidate(event) {
+        $(event.target).closest('button').closest('.row').remove()
+    }
+    var person_x_fill = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x-fill" viewBox="0 0 16 16">\
+        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>\
+      </svg>'
 </script>
 {% endblock %}
+

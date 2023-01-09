@@ -34,7 +34,7 @@
                 <tbody>
                     {% for region in regions %}
                     <tr>
-                        <td>{{ region.name }}</td>
+                        <td><a href="{% url 'region_details' region.id %}">{{ region.name }} </a></td>
                         <td>{{ region.associated_country.name }}</td>
                         <td>{{ region.associated_territory }}</td>
                         <td>{{ region.associated_city }}</td>

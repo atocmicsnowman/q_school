@@ -5,10 +5,13 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render 
 from django.views.generic import TemplateView
 from django.views import View
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from django_countries import countries
 
-from q_school.geography.models import Region, AreaOfOperation
+from q_school.geography.models import Region, AreaOfOperation, AreaOfOperationType, AreaOfOperationFlavor, Pax
+from q_school.geography.serializers import RegionSerializer
 
 
 
@@ -72,12 +75,46 @@ class RegionView(View):
         
 
 class AreaOfOperationView(View):
-    template = "area_of_operation_page.html"
+    template = "ao_page.html"
+    template_detail = "ao_details_page.html"
 
-    def get(self, request):
-        areas = AreaOfOperation.objects.all()
-        return render(request, self.template, {'areas': areas})
+    def get(self, request, ao_index=""):
+        if not ao_index:
+            areas = AreaOfOperation.objects.all()
+            ao_types = AreaOfOperationType.objects.all()
+            return render(request, self.template, {
+                'areas': areas, 
+                'countries': countries,
+                'ao_types': ao_types
+                })
+        return HttpResponse(status=404)
 
-# class AreaOfOperationView(CreateView):
-#     model = AreaOfOperation
-#     fields = ['name', 'primary_site_q', 'gps_long', 'gps_lat', 'street_address', 'street_address2', 'state', 'country', 'descriptoin', 'region']
+    def post(self, request, ao_index=""):
+        data = json.loads(request.body)
+        # AreaOfOperation.objects.get_or_create(
+        #     name=data['name'],
+        #     primary_site_q=Pax.objects.get(email=data['name']),
+        #     gps_long=data['area_long'],
+        #     gps_lat=data['area_lat'],
+        #     city=data['city'],
+        #     state=data['area_state'],
+        #     country=data['country'],
+
+        # )
+        print(json.dumps(data, indent=4))
+        return HttpResponse(status=204)
+
+
+class RegionViewSet(APIView):
+    """
+    API endpoint for region information
+    """
+    queryset = Region.objects.all().order_by('name')
+    serializer_class = RegionSerializer
+
+    def get(self, request, format=None):
+        """
+        get all region information
+        """
+        response = Region.objects.all().values('pk', 'name', 'associated_city', 'associated_country', 'associated_territory', 'description')
+        return Response(response)
