@@ -26,7 +26,10 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt-get update && apt-get install -y nodejs yarn
 
 WORKDIR /code
+
 COPY requirements.txt /code/
+RUN mkdir /code/staticfiles
+RUN mkdir /code/node_modules
 RUN pip install -r requirements.txt
 COPY . /code/
 RUN python3 manage.py collectstatic --no-input
