@@ -6,6 +6,7 @@ ENV PYTHONUNBUFFERED=1
 ENV POSTGRES_DB=postgres
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_NAME=postgres
+ENV POSTGRES_PASSWORD=postgres
 
 RUN mkdir /var/log/webapp
 RUN touch /var/log/webapp/debug.log
@@ -25,18 +26,21 @@ RUN apt-get update && apt-get install -y nodejs yarn
 WORKDIR /code
 
 COPY requirements.txt /code/
-COPY manage.py /code/
-COPY package.json /code/
-COPY yarn.lock /code/
-COPY q_school /code/q_school
-
-RUN mkdir /code/staticfiles
-RUN mkdir /code/node_modules
-
 RUN pip install -r requirements.txt
 
+RUN mkdir /code/node_modules
+COPY package.json /code/
+COPY yarn.lock /code/
 RUN yarn install
-RUN python3 manage.py collectstatic --no-input
+
+COPY manage.py /code/
+COPY q_school /code/q_school
+RUN mkdir /code/staticfiles
+ 
+#RUN mv q_school/settings.py q_school/settings.bak; \
+    #mv q_school/build_settings.py q_school/settings.py;\
+RUN DJANGO_SETTINGS_MODULE=q_school.build_settings python3 manage.py collectstatic --no-input
+    #mv q_school/settings.bak q_school/settings.py
 RUN ls -lah
 
 ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
