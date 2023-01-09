@@ -1,14 +1,11 @@
 # syntax=docker/dockerfile:1
 FROM python:3.10.7-slim-buster
-ARG POSTGRES_DB
-ARG POSTGRES_USER
-ARG POSTGRES_NAME
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV POSTGRES_DB=${POSTGRES_DB}
-ENV POSTGRES_USER=${POSTGRES_USER}
-ENV POSTGRES_NAME=${POSTGRES_NAME}
+ENV POSTGRES_DB=postgres
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_NAME=postgres
 
 RUN mkdir /var/log/webapp
 RUN touch /var/log/webapp/debug.log
@@ -28,10 +25,17 @@ RUN apt-get update && apt-get install -y nodejs yarn
 WORKDIR /code
 
 COPY requirements.txt /code/
+COPY manage.py /code/
+COPY package.json /code/
+COPY yarn.lock /code/
+COPY q_school /code/q_school
+
 RUN mkdir /code/staticfiles
 RUN mkdir /code/node_modules
+
 RUN pip install -r requirements.txt
-COPY . /code/
+
+RUN yarn install
 RUN python3 manage.py collectstatic --no-input
 RUN ls -lah
 
