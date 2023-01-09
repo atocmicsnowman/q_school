@@ -32,4 +32,5 @@ This project is intended to replace the scheduling system used by F3 organizatio
 `python manage.py migrate`
 5. Use the django [createsuperuser](https://docs.djangoproject.com/en/4.1/ref/django-admin/#createsuperuser) management command to create the super user account
 `python manage.py createsuperuser`
-5. Log in and go
+6. Log in and go
+

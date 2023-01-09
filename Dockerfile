@@ -44,3 +44,4 @@ RUN DJANGO_SETTINGS_MODULE=q_school.build_settings python3 manage.py collectstat
 RUN ls -lah
 
 ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
