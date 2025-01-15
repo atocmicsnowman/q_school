@@ -1,0 +1,24 @@
+-   model: geography.areaofoperationtype
+    pk: 1
+    fields:
+        ao_type: 1st F
+-   model: geography.areaofoperationtype
+    pk: 2
+    fields:
+        ao_type: 2nd F
+-   model: geography.areaofoperationtype
+    pk: 3
+    fields:
+        ao_type: 3rd F
+-   model: geography.areaofoperationtype
+    pk: 4
+    fields:
+        ao_type: CSAUP
+-   model: geography.areaofoperationtype
+    pk: 5
+    fields:
+        ao_type: Convergence
+-   model: geography.areaofoperationtype
+    pk: 6
+    fields:
+        ao_type: Invergence

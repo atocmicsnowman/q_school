@@ -7,7 +7,8 @@ from q_school.registration.models import Pax
 class Region(models.Model):
     """
     A region is a grouping of F3 AOs that has its own local leadership teams,
-    often referred to as the SLT (Shared Leadership Team) 
+    often referred to as the SLT (Shared Leadership Team)
+
     """
     name = models.CharField(max_length=80)
     associated_city = models.CharField(max_length=200, blank=True, null=True)

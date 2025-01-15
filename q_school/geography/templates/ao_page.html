@@ -19,27 +19,25 @@
     </div>
     <div class="row">
         <div class="col">
-            <table id="region-pax" class="table table-striped" style="width:100%">
+            <table id="region-pax" class="table display table-striped" style="width:100%">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Street Address</th>
                         <th>Street Address 2</th>
                         <th>Country</th>
-                        <th>longitude</th>
-                        <th>latitude</th>
+                        <th>GPS</th>
                         <th>Site Q</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for area in areas %}
                     <tr>
-                        <td><a href="{% url 'area_of_operation_list' area.id %}">{{ area.name }} </a></td>
+                        <td><a href="{% url 'area_of_operation_details' area.id %}">{{ area.name }} </a></td>
                         <td>{{ area.street_address }}</td>
                         <td>{{ area.street_address2 }}</td>
                         <td>{{ area.country }}</td>
-                        <td>{{ area.gps_long }}</td>
-                        <td>{{ area.gps_lat }}</td>
+                        <td>{{ area.gps_long|floatformat:6 }}, {{ area.gps_lat|floatformat:6 }}</td>
                         <td>{{ area.primary_site_q.f3_handle }}</td>
                     </tr>
                     {% endfor %}
@@ -69,10 +67,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="area-add-modalLabel">Add Region</h5>
+                    <h5 class="modal-title" id="area-add-modalLabel">Add Area of Operation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="add-pax-modal-form">
+                <div class="modal-body" id="add-area-modal-form">
                     {% csrf_token %}
                     <div class="lead">Enter the specifics about the AO</div>
                     <div class="input-group input-group-sm mb-3">
@@ -94,7 +92,7 @@
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text">AO Type</span>
-                        <select name="area_country" id="ao_type" class="form-select"
+                        <select name="ao_type" id="ao_type" class="form-select"
                             aria-label="Country selection" required>
                             <option value=""></option>
                             {% for ao_type in ao_types %}
@@ -149,7 +147,7 @@
                         <textarea name="area_description" type="text" class="form-control"
                             aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"></textarea>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button id="close_ao_modal" type="button" class="btn btn-secondary"
@@ -182,19 +180,19 @@
         submit_form(event)
 
         function submit_form(event) {
-            var form_info = document.querySelectorAll("#add-pax-modal-form input")
+            var form_info = document.querySelectorAll("#add-area-modal-form input")
             var new_area_info = {}
-            $('#add-pax-modal-form input').each(function (e) {
+            $('#add-area-modal-form input').each(function (e) {
                 var form_name = $(this).attr('name')
                 var value = $(this).val();
                 new_area_info[form_name] = value;
             })
-            $('#add-pax-modal-form textarea').each(function (e) {
+            $('#add-area-modal-form textarea').each(function (e) {
                 var form_name = $(this).attr('name')
                 var value = $(this).val();
                 new_area_info[form_name] = value;
             })
-            $('#add-pax-modal-form select').each(function (e) {
+            $('#add-area-modal-form select').each(function (e) {
                 var form_name = $(this).attr('name')
                 var value = $(this).val();
                 new_area_info[form_name] = value;

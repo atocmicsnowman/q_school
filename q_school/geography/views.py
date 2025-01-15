@@ -11,8 +11,8 @@ from rest_framework.response import Response
 from django_countries import countries
 
 from q_school.geography.models import Region, AreaOfOperation, AreaOfOperationType, AreaOfOperationFlavor, Pax
+from q_school.geography.utils.utils import AO_FORM_REGION_REGEX
 from q_school.geography.serializers import RegionSerializer
-
 
 
 class RegionsView(View):
@@ -83,25 +83,40 @@ class AreaOfOperationView(View):
             areas = AreaOfOperation.objects.all()
             ao_types = AreaOfOperationType.objects.all()
             return render(request, self.template, {
-                'areas': areas, 
+                'areas': areas,
                 'countries': countries,
                 'ao_types': ao_types
-                })
-        return HttpResponse(status=404)
+            })
+        return render(
+            request, self.template_detail,
+            {
+                "area": AreaOfOperation.objects.get(id=ao_index),
+
+            }
+        )
 
     def post(self, request, ao_index=""):
         data = json.loads(request.body)
-        # AreaOfOperation.objects.get_or_create(
-        #     name=data['name'],
-        #     primary_site_q=Pax.objects.get(email=data['name']),
-        #     gps_long=data['area_long'],
-        #     gps_lat=data['area_lat'],
-        #     city=data['city'],
-        #     state=data['area_state'],
-        #     country=data['country'],
 
-        # )
         print(json.dumps(data, indent=4))
+        region = AO_FORM_REGION_REGEX.match(data['default_region'])
+        area_region = Region.objects.get(
+            name=region.group('name'),
+            associated_territory=region.group('territory'),
+            associated_city=region.group('city'),
+            associated_country=region.group('country')
+        )
+        AreaOfOperation.objects.get_or_create(
+            name=data['area_name'],
+            primary_site_q=Pax.objects.get(user__username=data['site_q']),
+            gps_long=float(data['area_long']),
+            gps_lat=float(data['area_lat']),
+            city=data['area_city'],
+            state=data['area_state'],
+            country=data['area_country'],
+            ao_type=AreaOfOperationType.objects.get(id=data['ao_type']),
+            region=area_region
+        )
         return HttpResponse(status=204)
 
 
