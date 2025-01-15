@@ -1,10 +1,10 @@
 {
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "bootstrap": "5.2.3",
-    "bootstrap-icons": "^1.10.3",
-    "datatables": "^1.10.18",
-    "datatables-bootstrap": "0.0.1",
-    "fullcalendar": "^6.0.2",
-    "jquery": "^3.6.2"
+    "bootstrap-icons": "^1.11.2",
+    "datatables.net-bs5": "^1.13.8",
+    "fullcalendar": "^6.1.10",
+    "jquery": "^3.7.1"
   }
 }

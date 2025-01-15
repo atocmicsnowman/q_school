@@ -1,6 +1,7 @@
 services:
   qschool:
-    image: postgres:14.6-alpine
+    image: postgres:14.15-alpine
+    platform: linux/arm64/v8
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
@@ -15,8 +16,9 @@ services:
   #     - 5050:5050
   web:
     build: .
-    #volumes:
-    #- .:/code
+    platform: linux/arm64/v8
+    volumes:
+    - .:/code
     ports:
       - "8000:8000"
     environment:

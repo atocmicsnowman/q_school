@@ -1,13 +1,8 @@
-import csv
-import datetime
-from itertools import groupby
 import json
 import logging
 
-from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render 
-from django.views.generic import TemplateView
 from django.views import View
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser

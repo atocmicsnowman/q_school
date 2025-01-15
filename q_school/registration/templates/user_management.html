@@ -5,8 +5,8 @@
 
 {% block bodywork %}
 <script type="text/javascript" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'datatables/media/js/jquery.dataTables.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'datatables-bootstrap/js/dataTables.bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatables.net/js/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatables.net-bs5/js/dataTables.bootstrap5.js' %}"></script>
 <script type="text/javascript" src="{% static 'file_io_stuff.js' %}"></script>
 <div id="region-pax-table" class="container">
     <div class="row mt-3 ">
@@ -216,11 +216,17 @@
 {% block scripting %}
 <script>
     $(document).ready(function () {
-        $('#region-pax').DataTable();
+        var table = $('#region-pax').DataTable({
+        });
+        console.log(table)
+        {##}
+        {# table.buttons().container().appendTo( '#example_wrapper .col-md-6:eq(0)' ) #}
+        {##}
         document.getElementById('submit_upload_button').addEventListener('click', function (event) {
             upload_user_files()
         })
-        populate_region_list()
+        populate_region_list();
+
     });
 
     document.getElementById('add_pax_button').addEventListener("click", function (event) {
