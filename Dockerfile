@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10.7-slim-buster
+FROM python:3.11.11-slim-bullseye
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -43,4 +43,4 @@ RUN DJANGO_SETTINGS_MODULE=q_school.build_settings python3 manage.py collectstat
     #mv q_school/settings.bak q_school/settings.py
 RUN ls -lah
 
-ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000", "--reload"]
